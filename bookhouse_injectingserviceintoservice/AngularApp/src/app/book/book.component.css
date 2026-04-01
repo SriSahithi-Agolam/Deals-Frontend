@@ -1,0 +1,19 @@
+body{
+    background-color: #808080;
+}
+h2{
+    text-align:center;
+}
+
+table {
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    
+}
+
+div {
+    text-align: center;
+    color:firebrick;
+    font-weight: bold;
+}

@@ -1,0 +1,27 @@
+
+<table style="margin-left:auto;margin-right:auto;text-align:left;width:600px">
+
+ <!--Fill the code to display the output -->
+ <thead>
+    <tr>
+        <th>ISBN</th>
+        <th>Book Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+ </thead>
+ <tbody>
+    <tr *ngFor="let book of books">
+        <td>{{book.isbn}}</td>
+        <td>{{book.bookName}}</td>
+        <td>{{book.category}}</td>
+        <td>{{book.price}}</td>
+        <td>{{book.quantity}}</td>
+    </tr>
+ </tbody>
+</table>
+<br> <br>
+<div id="result" style="text-align:center; color:firebrick;font-weight:bold">
+    {{status}}
+</div>

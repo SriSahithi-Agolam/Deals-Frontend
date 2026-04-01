@@ -1,0 +1,18 @@
+<h2> GNN Book House</h2>
+
+<form>
+    
+    <!--Design the form as per the requirement-->
+    <div>
+        <label for="isbn">ISBN</label>
+        <select id="isbn" [(ngModel)]="isbn" name="isbn">
+            <option *ngFor="let book of bookService.bookList" [value]="book.isbn">{{book.isbn}}</option>
+        </select>
+    </div>
+    <div>
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" [(ngModel)]="quantity" name="quantity">
+    </div>
+    <button type="button" id="update" (click)="updateQuantity()">Update</button>
+
+</form>

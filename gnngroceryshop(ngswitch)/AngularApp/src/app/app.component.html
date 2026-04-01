@@ -1,0 +1,48 @@
+<body>
+  <!--Fill code for heading -->
+  <h2>{{title}}</h2>
+    <div class="form-group">
+      <!-- Fill code for Customer Name-->
+       <label for="customerName">Customer Name</label><br>
+       <input type="text" id="customerName" name="customerName" placeholder="Enter your name">
+    </div>
+    <br>
+    <div class="form-group">
+      <!-- Fill code for Phone Number-->
+       <label for="phoneNumber">Phone Number</label><br>
+       <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number">
+    </div>
+    <br>
+    <div>
+      <!-- Fill code for Product Type-->
+       <label for="search">Product Type</label><br>
+       <input type="text" id="search" name="search" placeholder="Search Here" [(ngModel)]="search">
+    </div>
+    
+    <!--Fill code for ngSwitch-->
+    <div [ngSwitch]="search">
+      <div *ngSwitchCase="'fruits'">
+        <select id="fruits">
+          <option *ngFor="let fruit of fruits">{{ fruit }}</option>
+        </select>
+      </div>
+      <div *ngSwitchCase="'vegetables'">
+        <select id="vegetables">
+          <option *ngFor="let vegetable of vegetables">{{ vegetable}}</option>
+        </select>
+      </div>
+      <div *ngSwitchCase="'meat'">
+        <select id="meat">
+          <option *ngFor="let item of meat">{{ item }}</option>
+        </select>
+      </div>
+    </div>
+</body>
+
+
+
+
+
+
+
+

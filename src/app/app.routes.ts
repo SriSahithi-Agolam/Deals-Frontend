@@ -1,0 +1,43 @@
+import { Routes } from '@angular/router';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { RegisterMerchantComponent } from './components/register-merchant/register-merchant.component';
+import { DealsComponent } from './components/deals/deals.component';
+import { MerchantsComponent } from './components/merchants/merchants.component';
+import { OrdersComponent } from './components/orders/orders.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { MerchantComponent } from './components/merchant/merchant.component';
+import { CartComponent } from './components/cart/cart.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { WishlistComponent } from './components/wishlist/wishlist.component';
+import { OrderTrackingComponent } from './components/order-tracking/order-tracking.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { AboutComponent } from './components/about/about.component';
+import { ContactComponent } from './components/contact/contact.component';
+import { HelpComponent } from './components/help/help.component';
+import { FaqComponent } from './components/faq/faq.component';
+import { TermsComponent } from './components/terms/terms.component';
+import { PrivacyComponent } from './components/privacy/privacy.component';
+
+export const routes: Routes = [
+  { path: '', redirectTo: '/deals', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'register-merchant', component: RegisterMerchantComponent },
+  { path: 'deals', component: DealsComponent },
+  { path: 'merchants', component: MerchantsComponent },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'admin', component: AdminComponent },
+  { path: 'merchant', component: MerchantComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'wishlist', component: WishlistComponent },
+  { path: 'tracking', component: OrderTrackingComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'help', component: HelpComponent },
+  { path: 'faq', component: FaqComponent },
+  { path: 'terms', component: TermsComponent },
+  { path: 'privacy', component: PrivacyComponent }
+];

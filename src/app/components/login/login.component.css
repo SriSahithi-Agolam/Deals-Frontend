@@ -1,0 +1,154 @@
+.quick-btn {
+  margin: 5px;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.quick-btn:hover {
+  background: #0056b3;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #ced4da;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #ffffff;
+  color: #495057;
+  transition: all 0.3s ease;
+}
+
+input::placeholder {
+  color: #6c757d;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 15px;
+  text-align: center;
+  background: #f8d7da;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+}
+
+.auth-options {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.auth-options p {
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.register-buttons {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.register-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.customer-btn {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.customer-btn:hover {
+  background: #218838;
+  border-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+}
+
+.merchant-btn {
+  background: #6f42c1;
+  color: white;
+  border-color: #6f42c1;
+}
+
+.merchant-btn:hover {
+  background: #5a32a3;
+  border-color: #5a32a3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(111,66,193,0.3);
+}

@@ -1,0 +1,15 @@
+<div class="merchants-container">
+  <h2>Merchants</h2>
+  <div *ngIf="loading">Loading merchants...</div>
+  <div class="merchants-grid" *ngIf="!loading">
+    <div class="merchant-card" *ngFor="let merchant of merchants">
+      <h3>{{ merchant.businessName }}</h3>
+      <p><strong>Email:</strong> {{ merchant.email }}</p>
+      <p *ngIf="merchant.phone"><strong>Phone:</strong> {{ merchant.phone }}</p>
+      <p *ngIf="merchant.address"><strong>Address:</strong> {{ merchant.address }}</p>
+      <span class="status" [class.active]="merchant.isActive">
+        {{ merchant.isActive ? 'Active' : 'Inactive' }}
+      </span>
+    </div>
+  </div>
+</div>

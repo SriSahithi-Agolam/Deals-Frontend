@@ -1,0 +1,42 @@
+<div class="orders-container">
+  <h2>My Orders</h2>
+  
+  <div *ngIf="loading" class="loading">Loading your orders...</div>
+  <div class="orders-list" *ngIf="!loading">
+    <div *ngIf="orders.length === 0" class="no-orders">
+      <p>You haven't placed any orders yet.</p>
+      <a routerLink="/deals" class="browse-deals">Browse Deals</a>
+    </div>
+    <div class="order-card" *ngFor="let order of orders">
+      <div class="order-header">
+        <h3>Order #{{ order.id }}</h3>
+        <span class="status" [class]="order.status.toLowerCase()" [class.pulsing]="isOrderBeingProcessed(order.id)">{{ order.status }}</span>
+      </div>
+      <div class="order-details">
+        <p><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</p>
+        <p *ngIf="order.deliveryDate"><strong>Expected Delivery:</strong> {{ order.deliveryDate | date:'medium' }}</p>
+        <p><strong>Delivery Address:</strong> {{ order.deliveryAddress }}</p>
+        <div class="order-items">
+          <h4>Items Ordered:</h4>
+          <div class="item" *ngFor="let item of order.orderItems">
+            <span>Deal #{{ item.dealId }} × {{ item.quantity }}</span>
+            <span>₹{{ item.subtotal }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="order-amounts">
+        <p><strong>Subtotal:</strong> ₹{{ order.totalAmount }}</p>
+        <p *ngIf="order.discount > 0" class="discount"><strong>Discount:</strong> -₹{{ order.discount }}</p>
+        <p class="final-amount"><strong>Total Paid:</strong> ₹{{ order.finalAmount }}</p>
+      </div>
+      <div class="order-status-info">
+        <div class="status-timeline">
+          <div class="step" [class.active]="isStepActive('PENDING', order.status)">Order Placed</div>
+          <div class="step" [class.active]="isStepActive('CONFIRMED', order.status)">Confirmed</div>
+          <div class="step" [class.active]="isStepActive('SHIPPED', order.status)">Shipped</div>
+          <div class="step" [class.active]="isStepActive('DELIVERED', order.status)">Delivered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

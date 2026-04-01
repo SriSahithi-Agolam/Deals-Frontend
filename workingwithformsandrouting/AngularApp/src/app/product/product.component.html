@@ -1,0 +1,35 @@
+	<!-- Implement title here -->
+  <h2>Product List</h2>
+  <table>
+	<!-- Implement table code here -->
+   <table border ="1">
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Price</th>
+    </tr>
+    <tr *ngFor="let prod of prodList"(click)="deleteProduct(prod)">
+      <td>{{prod.code}}</td>
+      <td>{{prod.name}}</td>
+      <td>{{prod.price}}</td>
+      <td>&lt;&lt;&lt;Click on this row to delete&gt;&gt;&gt;
+
+      </td>
+    </tr>
+   </table>
+  </table> 	
+  <br><br>
+  
+  <div>  
+  
+      <!-- Implement Input box and button code here -->
+       <form>
+        <label for="code">Code</label>
+        <input [(ngModel)]="model.code" id="code" name="code" required>
+        <label for="name">Name</label>
+        <input [(ngModel)]="model.name" id="name" name="name" required>
+        <label for="price">Price</label>
+        <input type="number" [(ngModel)]="model.price" id="price" name="price" required>
+        <button type="button" (click)="addProduct()">Add Product</button>
+       </form>
+  </div>

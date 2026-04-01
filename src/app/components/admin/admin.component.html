@@ -1,0 +1,582 @@
+<div class="admin-dashboard">
+  <!-- Header -->
+  <div class="admin-header">
+    <h2>Admin Dashboard</h2>
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      <span>Live Data</span>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button [class.active]="activeTab === 'dashboard'" (click)="onTabChange('dashboard')">📊 Dashboard</button>
+    <button [class.active]="activeTab === 'users'" (click)="onTabChange('users')">👥 Users</button>
+    <button [class.active]="activeTab === 'deals'" (click)="onTabChange('deals')">🎯 Deals</button>
+    <button [class.active]="activeTab === 'orders'" (click)="onTabChange('orders')">📦 Orders</button>
+    <button [class.active]="activeTab === 'merchants'" (click)="onTabChange('merchants')">🏪 Merchants</button>
+    <button [class.active]="activeTab === 'tickets'" (click)="onTabChange('tickets')">🎫 Tickets</button>
+    <button [class.active]="activeTab === 'logs'" (click)="onTabChange('logs')">📋 Logs</button>
+    <button [class.active]="activeTab === 'backup'" (click)="onTabChange('backup')">💾 Backup</button>
+    <button [class.active]="activeTab === 'monitoring'" (click)="onTabChange('monitoring')">📡 Monitor</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Dashboard Tab -->
+  <div *ngIf="activeTab === 'dashboard'" class="tab-content">
+    <!-- Real-time Stats -->
+    <div class="stats-grid">
+      <div class="stat-card users">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3>Total Users</h3>
+          <p class="stat-number">{{ stats.totalUsers }}</p>
+          <small>+{{ stats.newUsersToday }} today</small>
+        </div>
+      </div>
+      <div class="stat-card merchants">
+        <div class="stat-icon">🏢</div>
+        <div class="stat-info">
+          <h3>Merchants</h3>
+          <p class="stat-number">{{ stats.totalMerchants }}</p>
+          <small>{{ stats.activeMerchants }} active</small>
+        </div>
+      </div>
+      <div class="stat-card deals">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-info">
+          <h3>Active Deals</h3>
+          <p class="stat-number">{{ stats.activeDeals }}</p>
+          <small>{{ stats.expiringSoon }} expiring soon</small>
+        </div>
+      </div>
+      <div class="stat-card orders">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <h3>Revenue</h3>
+          <p class="stat-number">₹{{ stats.totalRevenue }}</p>
+          <small>+₹{{ stats.todayRevenue }} today</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <button class="action-btn" (click)="onTabChange('users')">
+          <span>👥</span> Manage Users
+        </button>
+        <button class="action-btn" (click)="onTabChange('deals')">
+          <span>🎯</span> Manage Deals
+        </button>
+        <button class="action-btn" (click)="onTabChange('orders')">
+          <span>📦</span> View Orders
+        </button>
+        <button class="action-btn" (click)="onTabChange('merchants')">
+          <span>🏪</span> Merchant Approval
+        </button>
+        <button class="action-btn" (click)="onTabChange('tickets')">
+          <span>🎫</span> Support Tickets
+        </button>
+        <button class="action-btn" (click)="onTabChange('logs')">
+          <span>📋</span> Audit Logs
+        </button>
+        <button class="action-btn" (click)="onTabChange('backup')">
+          <span>💾</span> Backup & Restore
+        </button>
+        <button class="action-btn" (click)="onTabChange('monitoring')">
+          <span>📊</span> System Monitor
+        </button>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="analytics-grid">
+      <div class="chart-card">
+        <h4>📈 Revenue Trends</h4>
+        <div class="chart-bars">
+          <div *ngFor="let data of analytics.revenueData" class="revenue-bar">
+            <div class="bar" [style.height.%]="data.percentage"></div>
+            <span class="bar-label">{{ data.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>🏆 Top Merchants</h4>
+        <div class="merchant-rankings">
+          <div *ngFor="let merchant of analytics.topMerchants; let i = index" class="merchant-item">
+            <div class="merchant-rank">#{{ i + 1 }}</div>
+            <div class="merchant-info">
+              <h5>{{ merchant.name }}</h5>
+              <span>₹{{ merchant.revenue }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>⚡ Live Metrics</h4>
+        <div class="realtime-metrics">
+          <div class="metric-card">
+            <span class="metric-number">{{ analytics.liveViews }}</span>
+            <span class="metric-text">Active Users</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">{{ analytics.liveOrders }}</span>
+            <span class="metric-text">Orders Today</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-number">₹{{ analytics.liveRevenue }}</span>
+            <span class="metric-text">Revenue Today</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Tab -->
+  <div *ngIf="activeTab === 'users'" class="tab-content">
+    <h3>User Management</h3>
+    
+    <div class="search-filters">
+      <input type="text" [value]="userSearch" (input)="onUserSearch($any($event).target.value)" placeholder="Search by name or email..." class="search-input">
+      <select [(ngModel)]="userRoleFilter" (change)="loadUsers()" class="filter-select">
+        <option value="">All Roles</option>
+        <option value="USER">Users</option>
+        <option value="ADMIN">Admins</option>
+        <option value="MERCHANT">Merchants</option>
+      </select>
+      <button (click)="clearUserFilters()" class="clear-btn">Clear</button>
+      <button (click)="exportUsers()" class="export-btn">📊 Export</button>
+      <button (click)="openUserModal()" class="add-btn">➕ Add User</button>
+    </div>
+
+    <div class="bulk-actions">
+      <input type="checkbox" (change)="toggleAllUsers($event)">
+      <button (click)="bulkDeleteUsers()" [disabled]="selectedUsers.length === 0" class="bulk-btn danger">Delete Selected</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox" (change)="toggleAllUsers($event)"></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td><input type="checkbox" [checked]="isUserSelected(user.id)" (change)="toggleUserSelection(user.id)"></td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.fullName || user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td><span class="role-badge">{{ user.role || 'USER' }}</span></td>
+            <td><span class="status-badge" [class]="(user.status || 'Active').toLowerCase()">{{ user.status || 'Active' }}</span></td>
+            <td>
+              <button class="btn-sm" (click)="openUserModal(user)">Edit</button>
+              <button class="btn-sm" (click)="toggleUserStatus(user)">Toggle</button>
+              <button class="btn-sm danger" (click)="deleteUser(user.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Deals Tab -->
+  <div *ngIf="activeTab === 'deals'" class="tab-content">
+    <h3>Deal Management</h3>
+    
+    <div class="search-filters">
+      <input type="text" [value]="dealSearch" (input)="onDealSearch($any($event).target.value)" placeholder="Search deals..." class="search-input">
+      <select [(ngModel)]="dealCategoryFilter" (change)="loadDeals()" class="filter-select">
+        <option value="">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Fashion">Fashion</option>
+        <option value="Food">Food</option>
+      </select>
+      <button (click)="clearDealFilters()" class="clear-btn">Clear</button>
+      <button (click)="exportDeals()" class="export-btn">📊 Export</button>
+      <button (click)="openDealModal()" class="add-btn">➕ Add Deal</button>
+    </div>
+
+    <div class="bulk-actions">
+      <input type="checkbox" (change)="toggleAllDeals($event)">
+      <button (click)="bulkDeleteDeals()" [disabled]="selectedDeals.length === 0" class="bulk-btn danger">Delete Selected</button>
+    </div>
+
+    <div class="deals-grid">
+      <div *ngFor="let deal of deals" class="deal-card">
+        <input type="checkbox" [checked]="isDealSelected(deal.id)" (change)="toggleDealSelection(deal.id)" class="deal-checkbox">
+        <h4>{{ deal.title }}</h4>
+        <p>{{ deal.discount }}% OFF - ₹{{ deal.price }}</p>
+        <p><strong>Category:</strong> {{ deal.category }}</p>
+        <p><strong>Status:</strong> <span class="status-badge" [class]="deal.status.toLowerCase()">{{ deal.status }}</span></p>
+        <div class="deal-actions">
+          <button class="btn-sm" (click)="openDealModal(deal)">Edit</button>
+          <button class="btn-sm" (click)="toggleDealStatus(deal)">Toggle</button>
+          <button class="btn-sm danger" (click)="deleteDeal(deal.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Orders Tab -->
+  <div *ngIf="activeTab === 'orders'" class="tab-content">
+    <h3>Order Management</h3>
+    
+    <div class="search-filters">
+      <input type="text" [value]="orderSearch" (input)="onOrderSearch($any($event).target.value)" placeholder="Search orders..." class="search-input">
+      <select [(ngModel)]="orderStatusFilter" (change)="loadOrders()" class="filter-select">
+        <option value="">All Status</option>
+        <option value="Processing">Processing</option>
+        <option value="Shipped">Shipped</option>
+        <option value="Delivered">Delivered</option>
+      </select>
+      <button (click)="clearOrderFilters()" class="clear-btn">Clear</button>
+      <button (click)="exportOrders()" class="export-btn">📊 Export</button>
+    </div>
+
+    <div class="orders-list">
+      <div *ngFor="let order of orders" class="order-item">
+        <div class="order-header">
+          <h4>Order #{{ order.id }}</h4>
+          <span class="order-status">{{ order.status }}</span>
+        </div>
+        <p><strong>Customer:</strong> User #{{ order.userId }}</p>
+        <p><strong>Amount:</strong> ₹{{ order.finalAmount || order.totalAmount || order.amount || 0 }}</p>
+        <p><strong>Items:</strong> {{ order.orderItems?.length || order.items || 0 }}</p>
+        <p><strong>Date:</strong> {{ (order.orderDate || order.date) | date:'short' }}</p>
+        <p *ngIf="order.deliveryAddress"><strong>Address:</strong> {{ order.deliveryAddress }}</p>
+        <div class="order-actions">
+          <select (change)="updateOrderStatus(order, $any($event).target.value)" class="status-select">
+            <option value="">Update Status</option>
+            <option value="PENDING">Pending</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="PROCESSING">Processing</option>
+            <option value="SHIPPED">Shipped</option>
+            <option value="DELIVERED">Delivered</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+          <button class="btn-sm" (click)="processRefund(order)">Refund</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Merchants Tab -->
+  <div *ngIf="activeTab === 'merchants'" class="tab-content">
+    <h3>Merchant Approval</h3>
+    
+    <div class="search-filters">
+      <select [(ngModel)]="merchantStatusFilter" (change)="loadMerchants()" class="filter-select">
+        <option value="">All Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+    </div>
+
+    <div class="merchants-list">
+      <div *ngFor="let merchant of merchants" class="merchant-card">
+        <div class="merchant-info">
+          <h4>{{ merchant.businessName || 'N/A' }}</h4>
+          <p><strong>Owner:</strong> {{ merchant.ownerName || 'N/A' }}</p>
+          <p><strong>Email:</strong> {{ merchant.email || 'N/A' }}</p>
+          <p><strong>Phone:</strong> {{ merchant.phone || 'N/A' }}</p>
+          <p *ngIf="merchant.address"><strong>Address:</strong> {{ merchant.address }}</p>
+          <p *ngIf="merchant.gstNumber"><strong>GST:</strong> {{ merchant.gstNumber }}</p>
+          <p><strong>Status:</strong> <span class="status-badge" [class]="(merchant.isActive ? 'active' : 'inactive')">{{ merchant.isActive ? 'Active' : 'Inactive' }}</span></p>
+        </div>
+        <div class="merchant-actions">
+          <button class="approve-btn" (click)="approveMerchant(merchant)" [disabled]="!merchant.isActive">✅ Approve</button>
+          <button class="reject-btn" (click)="rejectMerchant(merchant)" [disabled]="!merchant.isActive">❌ Reject</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Support Tickets Tab -->
+  <div *ngIf="activeTab === 'tickets'" class="tab-content">
+    <h3>Support Tickets</h3>
+    
+    <div class="search-filters">
+      <select [(ngModel)]="ticketPriorityFilter" (change)="loadTickets()" class="filter-select">
+        <option value="">All Priority</option>
+        <option value="HIGH">High</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LOW">Low</option>
+      </select>
+      <select [(ngModel)]="ticketStatusFilter" (change)="loadTickets()" class="filter-select">
+        <option value="">All Status</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+    </div>
+
+    <div class="tickets-list">
+      <div *ngFor="let ticket of tickets" class="ticket-card">
+        <div class="ticket-header">
+          <h4>Ticket #{{ ticket.id }}</h4>
+          <span class="ticket-priority" [class]="ticket.priority.toLowerCase()">{{ ticket.priority }}</span>
+        </div>
+        <div class="ticket-info">
+          <p><strong>From:</strong> {{ ticket.customerName }} ({{ ticket.email }})</p>
+          <p><strong>Subject:</strong> {{ ticket.subject }}</p>
+          <p><strong>Status:</strong> <span class="status-badge" [class]="ticket.status.toLowerCase()">{{ ticket.status }}</span></p>
+          <p><strong>Created:</strong> {{ ticket.createdDate | date:'short' }}</p>
+          <p class="ticket-message">{{ ticket.message }}</p>
+        </div>
+        <div class="ticket-actions">
+          <button class="resolve-btn" (click)="resolveTicket(ticket)" [disabled]="ticket.status === 'Resolved'">✅ Resolve</button>
+          <button class="reply-btn" (click)="replyToTicket(ticket)">💬 Reply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Audit Logs Tab -->
+  <div *ngIf="activeTab === 'logs'" class="tab-content">
+    <h3>Audit Logs</h3>
+    
+    <div class="logs-container">
+      <div *ngFor="let log of auditLogs" class="log-item">
+        <div class="log-header">
+          <span class="log-time">{{ log.timestamp | date:'short' }}</span>
+          <span class="log-type" [class]="log.type.toLowerCase()">{{ log.type }}</span>
+        </div>
+        <div class="log-content">
+          <strong>{{ log.user }}</strong> {{ log.action }}
+          <div class="log-details">{{ log.details }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 0">← Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ Math.ceil(totalElements / pageSize) }}</span>
+      <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements">Next →</button>
+    </div>
+  </div>
+
+  <!-- Backup Tab -->
+  <div *ngIf="activeTab === 'backup'" class="tab-content">
+    <h3>Backup & Restore</h3>
+    
+    <div class="backup-grid">
+      <div class="backup-card">
+        <h4>💾 Create Backup</h4>
+        <button class="backup-btn" (click)="createBackup()">Create New Backup</button>
+      </div>
+      <div class="backup-card">
+        <h4>📂 Recent Backups</h4>
+        <div *ngFor="let backup of backups" class="backup-item">
+          <span>{{ backup.name }}</span>
+          <span class="backup-date">{{ backup.date | date:'short' }}</span>
+          <div class="backup-actions">
+            <button class="restore-btn" (click)="restoreBackup(backup)">Restore</button>
+            <button class="delete-backup-btn" (click)="deleteBackup(backup)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Monitor Tab -->
+  <div *ngIf="activeTab === 'monitoring'" class="tab-content">
+    <h3>System Monitor</h3>
+    
+    <div class="monitor-grid">
+      <div class="monitor-card">
+        <h4>🖥️ Server Status</h4>
+        <div class="status-item">
+          <span>CPU Usage:</span>
+          <div class="progress-bar">
+            <div class="progress" [style.width.%]="serverStats.cpu"></div>
+          </div>
+          <span>{{ serverStats.cpu }}%</span>
+        </div>
+        <div class="status-item">
+          <span>Memory:</span>
+          <div class="progress-bar">
+            <div class="progress" [style.width.%]="serverStats.memory"></div>
+          </div>
+          <span>{{ serverStats.memory }}%</span>
+        </div>
+      </div>
+      <div class="monitor-card">
+        <h4>📡 API Status</h4>
+        <div *ngFor="let api of apiStatus" class="api-item">
+          <span class="api-name">{{ api.name }}</span>
+          <span class="api-status" [class]="api.status.toLowerCase()">{{ api.status }}</span>
+          <span class="api-response">{{ api.responseTime }}ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Modal -->
+  <div *ngIf="showUserModal" class="modal-overlay" (click)="showUserModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editingUser ? 'Edit User' : 'Add User' }}</h3>
+        <button class="close-btn" (click)="showUserModal = false">×</button>
+      </div>
+      <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="modal-form">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name" class="form-input">
+          <span class="error" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">Name is required</span>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" class="form-input">
+          <span class="error" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">Valid email is required</span>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select formControlName="role" class="form-input">
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+            <option value="MERCHANT">Merchant</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select formControlName="status" class="form-input">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="showUserModal = false">Cancel</button>
+          <button type="submit" class="btn-submit" [disabled]="!userForm.valid">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deal Modal -->
+  <div *ngIf="showDealModal" class="modal-overlay" (click)="showDealModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editingDeal ? 'Edit Deal' : 'Add Deal' }}</h3>
+        <button class="close-btn" (click)="showDealModal = false">×</button>
+      </div>
+      <form [formGroup]="dealForm" (ngSubmit)="saveDeal()" class="modal-form">
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" formControlName="title" class="form-input">
+          <span class="error" *ngIf="dealForm.get('title')?.invalid && dealForm.get('title')?.touched">Title is required</span>
+        </div>
+        <div class="form-group">
+          <label>Discount (%)</label>
+          <input type="number" formControlName="discount" class="form-input">
+          <span class="error" *ngIf="dealForm.get('discount')?.invalid && dealForm.get('discount')?.touched">Valid discount is required</span>
+        </div>
+        <div class="form-group">
+          <label>Price</label>
+          <input type="number" formControlName="price" class="form-input">
+          <span class="error" *ngIf="dealForm.get('price')?.invalid && dealForm.get('price')?.touched">Valid price is required</span>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select formControlName="category" class="form-input">
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Food">Food</option>
+          </select>
+          <span class="error" *ngIf="dealForm.get('category')?.invalid && dealForm.get('category')?.touched">Category is required</span>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" formControlName="expiryDate" class="form-input">
+          <span class="error" *ngIf="dealForm.get('expiryDate')?.invalid && dealForm.get('expiryDate')?.touched">Expiry date is required</span>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="showDealModal = false">Cancel</button>
+          <button type="submit" class="btn-submit" [disabled]="!dealForm.valid">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ticket Modal -->
+  <div *ngIf="showTicketModal && editingTicket" class="modal-overlay" (click)="showTicketModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Ticket #{{ editingTicket.id }}</h3>
+        <button class="close-btn" (click)="showTicketModal = false">×</button>
+      </div>
+      <div class="ticket-details">
+        <p><strong>From:</strong> {{ editingTicket.customerName }} ({{ editingTicket.email }})</p>
+        <p><strong>Subject:</strong> {{ editingTicket.subject }}</p>
+        <p><strong>Priority:</strong> <span class="ticket-priority" [class]="editingTicket.priority.toLowerCase()">{{ editingTicket.priority }}</span></p>
+        <p><strong>Status:</strong> <span class="status-badge" [class]="editingTicket.status.toLowerCase()">{{ editingTicket.status }}</span></p>
+        <p><strong>Message:</strong></p>
+        <p class="ticket-message">{{ editingTicket.message }}</p>
+        <div *ngIf="editingTicket?.responses" class="responses">
+          <h4>Responses:</h4>
+          <div *ngFor="let response of editingTicket.responses" class="response-item">
+            {{ response }}
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="reply-btn" (click)="replyToTicket(editingTicket)">💬 Reply</button>
+        <button class="resolve-btn" (click)="resolveTicket(editingTicket)" [disabled]="editingTicket.status === 'Resolved'">✅ Resolve</button>
+        <button class="btn-cancel" (click)="showTicketModal = false">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

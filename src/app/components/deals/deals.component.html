@@ -1,0 +1,100 @@
+<div class="deals-container">
+  <h2>Available Deals & Coupons</h2>
+  
+  <!-- Search and Filter Section -->
+  <div class="search-filter-section">
+    <div class="search-bar">
+      <input 
+        type="text" 
+        placeholder="Search deals..." 
+        [(ngModel)]="searchTerm" 
+        (input)="filterDeals()"
+        class="search-input"
+      >
+      <input 
+        type="text" 
+        placeholder="Location (city)..." 
+        [(ngModel)]="locationFilter" 
+        (input)="filterDeals()"
+        class="search-input"
+      >
+      <button class="search-btn">🔍</button>
+    </div>
+    
+    <div class="filters">
+      <select [(ngModel)]="selectedCategory" (change)="filterDeals()" class="filter-select">
+        <option value="">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Food">Food</option>
+        <option value="Fashion">Fashion</option>
+        <option value="Travel">Travel</option>
+        <option value="Books">Books</option>
+      </select>
+      
+      <select [(ngModel)]="selectedDiscount" (change)="filterDeals()" class="filter-select">
+        <option value="">All Discounts</option>
+        <option value="10">10%+ OFF</option>
+        <option value="25">25%+ OFF</option>
+        <option value="50">50%+ OFF</option>
+        <option value="75">75%+ OFF</option>
+      </select>
+      
+      <div class="price-filter-group">
+        <input 
+          type="range" 
+          min="0" 
+          max="100000" 
+          step="500"
+          [(ngModel)]="maxPrice" 
+          (input)="filterDeals()"
+          class="price-range"
+        >
+        <span class="price-label">Max: ₹{{maxPrice}}</span>
+      </div>
+      
+      <button class="clear-filters" (click)="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+  
+  <div *ngIf="loading">Loading deals...</div>
+  <div class="results-info" *ngIf="!loading">
+    Showing {{filteredDeals.length}} of {{deals.length}} deals
+  </div>
+  
+  <div class="deals-grid" *ngIf="!loading">
+    <div class="deal-card" *ngFor="let deal of filteredDeals">
+      <h3>{{ deal.title || 'Special Deal' }}</h3>
+      <p class="description">{{ deal.description || 'Great savings available' }}</p>
+      <div class="deal-info">
+        <span class="discount">{{ deal.discount }}% OFF</span>
+        <span class="price">₹{{ deal.price }}</span>
+      </div>
+      <div class="deal-details">
+        <p><strong>Category:</strong> {{ deal.category }}</p>
+        <p><strong>Location:</strong> {{ getDealLocation(deal) }}</p>
+        <p><strong>Coupon Code:</strong> <span class="coupon">{{ deal.couponCode }}</span></p>
+        <p><strong>Cashback:</strong> {{ deal.cashbackPoints }} points</p>
+        <p><strong>Expires:</strong> 
+          <span [class.expired]="isExpired(deal.expiryDate)" [class.expiring]="isExpiringSoon(deal.expiryDate)">
+            {{ deal.expiryDate | date }}
+            <span *ngIf="!isExpired(deal.expiryDate)" class="countdown">
+              ({{ getTimeRemaining(deal.expiryDate) }})
+            </span>
+          </span>
+        </p>
+      </div>
+      <div class="card-actions">
+        <button class="btn-primary" (click)="useDeal(deal)">Use Deal</button>
+        <button class="wishlist-btn" (click)="toggleWishlist(deal)" [class.in-wishlist]="isInWishlist(deal.id!)">
+          {{ isInWishlist(deal.id!) ? '❤️' : '🤍' }}
+        </button>
+      </div>
+      <app-review [dealId]="deal.id!.toString()" [merchantId]="(deal.merchantId || 1).toString()"></app-review>
+    </div>
+  </div>
+  
+  <div *ngIf="!loading && filteredDeals.length === 0" class="no-results">
+    <p>No deals found matching your criteria</p>
+    <button class="clear-filters" (click)="clearFilters()">Clear Filters</button>
+  </div>
+</div>

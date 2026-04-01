@@ -1,0 +1,21 @@
+.product {
+   border: 1px solid black;
+   width: 80%;
+}
+
+body {
+   background-color: aliceblue;
+}
+
+h2 {
+   text-align: center;
+   color: #e7d113;
+}
+
+div {
+   margin-left: 20%;   
+}
+
+button {
+   margin-left: 30%;
+}

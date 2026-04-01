@@ -1,0 +1,25 @@
+<body style="background-color: rgb(138, 138, 130);">
+     
+    <form>
+   
+   <!--Design the page as per the requirement-->
+   <div *ngIf = "flag === 1">
+    <h2>Rent A Home</h2>
+    <label for="houseType">House Type</label>
+    <input id="houseType" name="houseType" type="text"><br>
+    <label for="location">Location</label>
+    <input id="location" name="location" type="text"><br>
+    <label for="contactNumber">Contact Number</label>
+    <input id="contactNumber" name="contactNumber" type="text"><br>
+    <button id="post" name="post">Post</button>
+   </div>
+   <div *ngIf="flag===2">
+    <h2>Search Home</h2>
+    <label for="searchText">Search</label>
+    <input id="searchText" name="searchText" type="text"><br>
+    <label for="location">Location</label>
+    <input id="location" name="location" type="text"><br>
+    <button id="search" name="search">Search</button>
+   </div>
+    </form>
+    </body>
